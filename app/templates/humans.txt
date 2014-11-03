@@ -1,0 +1,28 @@
+/* the humans responsible & colophon */
+/* humanstxt.org */
+
+/* TEAM */
+
+  Lynn Wallenstein
+  WWW: http://www.lynn.io
+  Twitter: @LynnWallenstein
+  Location: San Francisco, CA USA
+
+/* THANKS */
+  Names (& URL):
+
+/* SITE */
+  Standards: HTML5, CSS3, JavaScript, CoffeeScript, Sass
+
+  Components:
+    Modernizr : http://www.modernizr.com/
+    jQuery : http://jquery.com/
+    HTML5 Boilerplate : http://html5boilerplate.com/
+
+  Software/Tools:
+    Atom : http://atom.io/
+    SASS : http://sass-lang.com/
+    Bower: http://bower.io/
+    Gulp: http://gulpjs.com/
+    Autoprefixer: https://github.com/postcss/autoprefixer
+    Yeoman: http://yeoman.io/
