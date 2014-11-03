@@ -3,6 +3,7 @@ var util = require("util");
 var path = require("path");
 var yeoman = require("yeoman-generator");
 var yosay = require("yosay");
+var wiredep = require('wiredep');
 
 var GulpWebsiteGenerator = yeoman.generators.Base.extend({
 
@@ -39,13 +40,23 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
     app: function () {
       this.dest.mkdir("app");
       this.dest.mkdir("app/templates");
-      this.dest.mkdir("app/coffeescript");
-      this.dest.mkdir("app/sass");
       this.dest.mkdir("app/img");
       this.dest.mkdir("app/css");
       this.dest.mkdir("app/js");
       this.dest.mkdir("app/fonts");
 
+      this.src.copy("_sass", "sass");
+      this.src.copy("_coffeescript", "coffeescript");
+
+      this.src.copy("favicon.ico", "app/favicon.ico");
+      this.src.copy("robots.txt", "app/robots.txt");
+      this.src.copy("humans.txt", "app/humans.txt");
+
+      this.copy('gitignore', '.gitignore');
+      this.copy('gitattributes', '.gitattributes');
+      this.src.copy("editorconfig", ".editorconfig");
+      this.src.copy("jshintrc", ".jshintrc");
+      this.src.copy("_scss-lint.yml", ".scss-lint.yml");
       this.src.copy("_package.json", "package.json");
       this.src.copy("bowerrc", ".bowerrc");
     },
@@ -55,18 +66,6 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
       this.bowerFile = this.engine(this.indexFile, this);
       this.write("bower.json", this.bowerFile);
     }
-
-    sitemeta: function () {
-      this.src.copy("favicon.ico", "app/favicon.ico");
-      this.src.copy("robots.txt", "app/robots.txt");
-      this.src.copy("humans.txt", "app/humans.txt");
-    },
-
-    projectfiles: function () {
-      this.src.copy("editorconfig", ".editorconfig");
-      this.src.copy("jshintrc", ".jshintrc");
-      this.src.copy("_scss-lint.yml", ".scss-lint.yml");
-    },
 
     writeIndex: function () {
       this.indexFile = this.src.read("index.html");
