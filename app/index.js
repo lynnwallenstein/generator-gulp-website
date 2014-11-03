@@ -16,17 +16,17 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
 
     // Have Yeoman greet the user.
     this.log(yosay(
-      "Welcome Lynn\'s Yeoman web site generator!"
+      "Welcome Lynn's Yeoman web site generator!"
     ));
 
     var prompts = [{
       name: "websiteName",
-      message: "What is your website\'s name ?"
+      message: "What is your website's name?",
+      default: "website"
     }];
 
-    this.prompt(prompts, function (props) {
-      this.someOption = props.someOption;
-
+    this.prompt(prompts, function (answers) {
+      this.websiteName = answers.websiteName;
       done();
     }.bind(this));
   },
@@ -39,33 +39,33 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
 
     app: function () {
       this.dest.mkdir("app");
-      this.dest.mkdir("app/templates");
+      this.dest.mkdir("app/partials");
       this.dest.mkdir("app/img");
       this.dest.mkdir("app/css");
       this.dest.mkdir("app/js");
       this.dest.mkdir("app/fonts");
 
-      this.src.copy("_sass", "sass");
-      this.src.copy("_coffeescript", "coffeescript");
+      this.directory("_sass", "sass");
+      this.directory("_coffeescript", "coffeescript");
 
-      this.src.copy("favicon.ico", "app/favicon.ico");
-      this.src.copy("robots.txt", "app/robots.txt");
-      this.src.copy("humans.txt", "app/humans.txt");
+      this.copy("favicon.ico",    "app/favicon.ico");
+      this.copy("robots.txt",     "app/robots.txt");
+      this.copy("humans.txt",     "app/humans.txt");
 
-      this.copy('gitignore', '.gitignore');
-      this.copy('gitattributes', '.gitattributes');
-      this.src.copy("editorconfig", ".editorconfig");
-      this.src.copy("jshintrc", ".jshintrc");
-      this.src.copy("_scss-lint.yml", ".scss-lint.yml");
-      this.src.copy("_package.json", "package.json");
-      this.src.copy("bowerrc", ".bowerrc");
+      this.copy("gitignore",      ".gitignore");
+      this.copy("gitattributes",  ".gitattributes");
+      this.copy("editorconfig",   ".editorconfig");
+      this.copy("jshintrc",       ".jshintrc");
+      this.copy("_scss-lint.yml", ".scss-lint.yml");
+      this.copy("_package.json",  "package.json");
+      this.copy("bowerrc",        ".bowerrc");
     },
 
     writeBower: function () {
       this.bowerFile = this.src.read("_bower.json");
       this.bowerFile = this.engine(this.indexFile, this);
       this.write("bower.json", this.bowerFile);
-    }
+    },
 
     writeIndex: function () {
       this.indexFile = this.src.read("index.html");
@@ -78,6 +78,7 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
   end: function () {
     this.installDependencies();
   }
+
 });
 
 module.exports = GulpWebsiteGenerator;
