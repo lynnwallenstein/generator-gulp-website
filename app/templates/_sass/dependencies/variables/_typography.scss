@@ -1,0 +1,26 @@
+// ------------------------------------------------------------------
+//  Typography
+// ------------------------------------------------------------------
+
+$body-stack: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+$legal-stack: Georgia, "Times New Roman", Times, serif !default;
+$code-stack: Consolas, "Liberation Mono", Menlo, Courier, monospace !default;
+
+$base-font-size: 14px !default;
+$base-line-height: 20px !default;
+
+//  Headings
+$headings-font-family: $body-stack !default;
+$headings-font-weight: normal !default; // instead of browser default, bold
+$headings-font-color: '' !default; // empty to use BS default, $text-color
+
+$subheadings-font-family: $body-stack !default;
+$subheadings-font-weight: normal !default; // instead of browser default, bold
+$subheadings-font-color: '' !default; // empty to use BS default, $text-color
+
+//  Body
+$base-font-family: $body-stack !default;
+
+///  Special Cases
+$legal-font-family: $legal-stack !default;
+$code-font-family: $code-stack !default;

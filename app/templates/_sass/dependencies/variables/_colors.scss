@@ -1,0 +1,65 @@
+// ------------------------------------------------------------------
+//  Colors
+// ------------------------------------------------------------------
+
+$black: #000 !default;
+$white: #fff !default;
+$red: red !default;
+$orange: orange !default;
+$yellow: yellow !default;
+$green: green !default;
+$blue: blue !default;
+$purple: purple !default;
+$brown: brown !default;
+
+// Grays
+
+$gray: #a29f99 !default;
+$gray-light: lighten($gray, 20%) !default;
+$gray-lighter: lighten($gray, 50%) !default;
+$gray-lightest: lighten($gray, 90%) !default;
+$gray-dark: darken($gray, 20%) !default;
+$gray-darker: darken($gray, 50%) !default;
+$gray-darkest: darken($gray, 80%) !default;
+
+// Transparent
+
+$transparent-white: hsla(100,100%,100%,0) !default;
+$transparent-black: hsla(0,0%,0%,0) !default;
+
+$shadow-lightest: hsla(0, 0%, 0%, 0.1) !default;
+$shadow-lighter: hsla(0, 0%, 0%, 0.25) !default;
+$shadow-light: hsla(0, 0%, 0%, 0.5) !default;
+$shadow: hsla(0, 0%, 0%, 0.75) !default;
+
+$glow-lightest: hsla(100,100%,100%,0.1) !default;
+$glow-lighter: hsla(100,100%,100%,0.25) !default;
+$glow-light: hsla(100,100%,100%,0.5) !default;
+$glow: hsla(100,100%,100%,0.75) !default;
+
+$highlight: transparentize($yellow, .7) !default;
+
+
+//  Colors2THings
+// ------------------------------------------------------------------
+
+$app-color-primary: $blue !default; // The main highlight color of the app
+$app-color-secondary: $red !default; // Secondary color used
+
+$site-background-color: $white !default;
+
+// Text Color
+
+$text-color: #222 !default;
+$text-color-light: $gray-light !default;
+
+// Input placeholder text color
+
+$placeholder-text-color: $gray-light !default;
+
+// Links
+
+$link-color: $blue !default;
+$link-color-hover: lighten($link-color, 20%) !default;
+$link-color-active: lighten($link-color, 30%) !default;
+$link-color-visited: darken($link-color, 20%) !default;

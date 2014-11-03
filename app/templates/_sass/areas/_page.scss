@@ -1,0 +1,18 @@
+// ------------------------------------------------------------------
+//  Page Structure
+// ------------------------------------------------------------------
+
+body {
+  text-align: center;
+}
+
+#main,
+#page-footer,
+#page-header {
+  margin: auto;
+  text-align: left;
+  width: $nest-width;
+} //  #main ...
+
+#main {
+} // #main

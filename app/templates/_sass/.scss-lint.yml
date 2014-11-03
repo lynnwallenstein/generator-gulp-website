@@ -1,0 +1,21 @@
+# This is the lint file for .scss files. It uses https://github.com/causes/scss-lint
+# to search through .scss files and point out errors.
+# You can view these errors in your editor.
+#
+# Here's a link to all the default configurations
+# https://github.com/causes/scss-lint/blob/master/config/default.yml
+# below is our settings.
+
+linters:
+  StringQuotes:
+    style: double_quotes
+
+  IdWithExtraneousSelector:
+    enabled: false # would like to kill this, but we use too many #'s right now
+
+  PlaceholderInExtend:
+    enabled: false
+
+  SelectorDepth:
+    enabled: true
+    max_depth: 4 # we're working our way down to 3
