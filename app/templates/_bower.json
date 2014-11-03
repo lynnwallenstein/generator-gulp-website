@@ -1,6 +1,10 @@
 {
-  "name": "package",
-  "version": "0.0.0",
-  "dependencies": {}
+  "name": "<%= appname %>",
+  "version": "0.0.1",
+  "dependencies": {
+    "normalize-css": "latest",
+    "jquery": "latest",
+    "modernizr": "latest",
+    "keanu": "https://github.com/meticulous/keanu.git"
+  }
 }
-

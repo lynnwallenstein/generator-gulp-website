@@ -33,7 +33,7 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
   writing: {
 
     gulpfile: function() {
-      this.template('gulpfile.js');
+      this.template("gulpfile.js");
     },
 
     app: function () {
@@ -48,8 +48,13 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
 
       this.src.copy("_package.json", "package.json");
       this.src.copy("bowerrc", ".bowerrc");
-      this.src.copy("_bower.json", "bower.json");
     },
+
+    writeBower: function () {
+      this.bowerFile = this.src.read("_bower.json");
+      this.bowerFile = this.engine(this.indexFile, this);
+      this.write("bower.json", this.bowerFile);
+    }
 
     sitemeta: function () {
       this.src.copy("favicon.ico", "app/favicon.ico");
@@ -61,6 +66,12 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
       this.src.copy("editorconfig", ".editorconfig");
       this.src.copy("jshintrc", ".jshintrc");
       this.src.copy("_scss-lint.yml", ".scss-lint.yml");
+    },
+
+    writeIndex: function () {
+      this.indexFile = this.src.read("index.html");
+      this.indexFile = this.engine(this.indexFile, this);
+      this.write("app/index.html", this.indexFile);
     }
 
   },
