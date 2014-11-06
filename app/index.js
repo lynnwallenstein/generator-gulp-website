@@ -63,7 +63,7 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
 
     writeBower: function () {
       this.bowerFile = this.src.read("_bower.json");
-      this.bowerFile = this.engine(this.indexFile, this);
+      this.bowerFile = this.engine(this.bowerFile, this);
       this.write("bower.json", this.bowerFile);
     },
 
