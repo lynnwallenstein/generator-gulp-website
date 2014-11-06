@@ -45,8 +45,8 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
       this.dest.mkdir("app/js");
       this.dest.mkdir("app/fonts");
 
-      this.directory("_sass", "sass");
-      this.directory("_coffeescript", "coffeescript");
+      this.directory("_sass", "app/sass");
+      this.directory("_coffeescript", "app/coffeescript");
 
       this.copy("favicon.ico",    "app/favicon.ico");
       this.copy("robots.txt",     "app/robots.txt");
