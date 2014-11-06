@@ -6,34 +6,38 @@ var $ = require("gulp-load-plugins")();
 
 gulp.task("clean", require("del").bind(null, [".tmp", "dist"]));
 
-gulp.task('styles', function () {
-  return gulp.src('app/sass/main.scss')
+gulp.task("styles", function () {
+  return gulp.src("app/sass/main.scss")
     .pipe($.plumber())
     .pipe($.rubySass({
-      style: 'expanded',
+      style: "expanded",
       precision: 10
     }))
-    .pipe($.autoprefixer({browsers: ['last 1 version']}))
-    .pipe(gulp.dest('.tmp/styles'));
+    .pipe($.autoprefixer({browsers: ["last 1 version"]}))
+    .pipe(gulp.dest(".tmp/styles"));
 });
 
-gulp.task('connect',['styles'], function () {
-  var serveStatic = require('serve-static');
-  var serveIndex = require('serve-index');
-  var app = require('connect')()
-    .use(require('connect-livereload')({port: 35729}))
-    .use(serveStatic('app'))
-    .use(serveStatic('.tmp'))
+gulp.task("connect",["styles"], function () {
+  var serveStatic = require("serve-static");
+  var serveIndex = require("serve-index");
+  var app = require("connect")()
+    .use(require("connect-livereload")({port: 35729}))
+    .use(serveStatic("app"))
+    .use(serveStatic(".tmp"))
     // paths to bower_components should be relative to the current file
     // e.g. in app/index.html you should use ../bower_components
-    .use('/bower_components', serveStatic('bower_components'))
-    .use(serveIndex('app'));
+    .use("/bower_components", serveStatic("bower_components"))
+    .use(serveIndex("app"));
 
-  require('http').createServer(app)
+  require("http").createServer(app)
     .listen(9000)
-    .on('listening', function () {
-      console.log('Started connect web server on http://localhost:9000');
+    .on("listening", function () {
+      console.log("Started connect web server on http://localhost:9000");
     });
+});
+
+gulp.task("serve", ["connect", "watch"], function () {
+  require("opn")("http://localhost:9000");
 });
 
 gulp.task("watch", ["connect"], function () {
