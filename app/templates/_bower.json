@@ -5,6 +5,6 @@
     "normalize-css": "latest",
     "jquery": "latest",
     "modernizr": "latest",
-    "breakpoint": "latest"
+    "compass-breakpoint": "latest"
   }
 }
