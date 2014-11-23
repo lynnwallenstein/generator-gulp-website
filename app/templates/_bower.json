@@ -5,6 +5,6 @@
     "normalize-css": "latest",
     "jquery": "latest",
     "modernizr": "latest",
-    "keanu": "https://github.com/meticulous/keanu.git"
+    "breakpoint": "latest"
   }
 }
