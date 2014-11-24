@@ -15,12 +15,13 @@
 
   <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-  <!-- build:css css/main.css -->
-  <!-- bower:css -->
-  <!-- endbower -->
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="../bower_components/normalize-css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
   <!-- endbuild -->
 
-  <!-- build:js ../bower_components/modernizr/modernizr.js -->
+  <!-- build:js scripts/vendor/modernizr.js -->
+  <script src="../bower_components/modernizr/modernizr.js"></script>
   <!-- endbuild -->
 </head>
 
@@ -45,13 +46,12 @@
     function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
     e=o.createElement(i);r=o.getElementsByTagName(i)[0];
     e.src='//www.google-analytics.com/analytics.js';
-    r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-    ga('create','UA-XXXXX-X');ga('send','pageview');
+    r.parentNode.insertBefore(e,r)}(window,document,"script","ga"));
+    ga("create","UA-XXXXX-X");ga("send","pageview");
   </script>
 
-  <!-- build:js js/main.js -->
-  <!-- bower:js -->
-  <!-- endbower -->
+  <!-- build:js -->
+  <script src="js/main.js"></script>
   <!-- endbuild -->
 
 </body>

@@ -14,12 +14,22 @@ gulp.task("styles", function () {
       precision: 10
     }))
     .pipe($.autoprefixer({browsers: ["last 1 version"]}))
-    .pipe(gulp.dest(".tmp/styles"));
+    .pipe(gulp.dest(".tmp/css"));
 });
 
-gulp.task("connect", ["styles"], function () {
-  var serveStatic = require("serve-static");
-  var serveIndex = require("serve-index");
+gulp.task("scripts", function() {
+  var gutil = require("gulp-util")
+  return gulp.src("app/coffeescript/**/*.coffee")
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+    .pipe($.coffee({bare: true}).on("error", gutil.log))
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest(".tmp/js"))
+})
+
+gulp.task("connect", ["styles", "scripts"], function () {
+  var serveStatic = require('serve-static');
+  var serveIndex = require('serve-index');
   var app = require("connect")()
     .use(require("connect-livereload")({port: 35729}))
     .use(serveStatic("app"))
@@ -46,12 +56,11 @@ gulp.task("watch", ["serve"], function () {
   // watch for changes
   gulp.watch([
     "app/*.html",
-    ".tmp/styles/**/*.css",
-    "app/scripts/**/*.js",
     "app/images/**/*"
   ]).on("change", $.livereload.changed);
 
-  gulp.watch("app/styles/**/*.scss", ["styles"]);
+  gulp.watch("app/sass/**/*.scss", ["styles"]).on("change", $.livereload.changed);
+  gulp.watch("app/coffeescript/**/*.coffee", ["scripts"]).on("change", $.livereload.changed);
   gulp.watch("bower.json", ["wiredep"]);
 });
 
