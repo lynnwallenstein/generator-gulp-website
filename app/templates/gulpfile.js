@@ -17,7 +17,7 @@ gulp.task("styles", function () {
     .pipe(gulp.dest(".tmp/styles"));
 });
 
-gulp.task("connect",["styles"], function () {
+gulp.task("connect", ["styles"], function () {
   var serveStatic = require("serve-static");
   var serveIndex = require("serve-index");
   var app = require("connect")()
@@ -36,11 +36,11 @@ gulp.task("connect",["styles"], function () {
     });
 });
 
-gulp.task("serve", ["connect", "watch"], function () {
+gulp.task("serve", ["connect"], function () {
   require("opn")("http://localhost:9000");
 });
 
-gulp.task("watch", ["connect"], function () {
+gulp.task("watch", ["serve"], function () {
   $.livereload.listen();
 
   // watch for changes
