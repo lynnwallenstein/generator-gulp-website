@@ -75,22 +75,32 @@ gulp.task("watch", ["serve"], function () {
   gulp.watch("app/coffeescript/**/*.coffee", ["scripts"]).on("change", $.livereload.changed);
 });
 
-gulp.task("build", ["html", "styles", "scripts", "images"], function () {
+gulp.task("build", ["styles", "scripts", "images", "html"], function () {
 
   gulp.src([".tmp/*.html"], { dot: true })
-  .pipe(gulp.dest("dist"));
+  .pipe($.plumber())
+  .pipe(gulp.dest("dist"))
+  .pipe($.size({title: "build html", gzip: true}));
 
   gulp.src(["app/img/**"], { dot: true })
-  .pipe(gulp.dest("dist/img"));
+  .pipe($.plumber())
+  .pipe(gulp.dest("dist/img"))
+  .pipe($.size({title: "build images", gzip: true}));
 
   gulp.src(["app/css/**"], { dot: true })
-  .pipe(gulp.dest("dist/css"));
+  .pipe($.plumber())
+  .pipe(gulp.dest("dist/css"))
+  .pipe($.size({title: "build css", gzip: true}));
 
   gulp.src(["app/js/**"], { dot: true })
-  .pipe(gulp.dest("dist/js"));
+  .pipe($.plumber())
+  .pipe(gulp.dest("dist/js"))
+  .pipe($.size({title: "build js", gzip: true}));
 
   gulp.src(["app/fonts/**"], { dot: true })
-  .pipe(gulp.dest("dist/fonts"));
+  .pipe($.plumber())
+  .pipe(gulp.dest("dist/fonts"))
+  .pipe($.size({title: "build fonts", gzip: true}));
 
 });
 
