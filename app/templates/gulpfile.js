@@ -14,7 +14,8 @@ gulp.task("html", function() {
   .pipe(fileinclude({prefix: "@@", basepath: "app/partials/"}))
   .pipe(wiredep({directory: "app/bower_components"}))
   .pipe($.usemin())
-  .pipe(gulp.dest(".tmp/"));
+  .pipe(gulp.dest(".tmp/"))
+  .pipe($.size({title: "html", gzip: true}));
 });
 
 gulp.task("styles", function () {
@@ -22,7 +23,6 @@ gulp.task("styles", function () {
   .pipe($.plumber())
   .pipe($.rubySass({style: "expanded", precision: 10}))
   .pipe($.autoprefixer({browsers: ["last 1 version"]}))
-  .pipe($.if("*.css", $.csso()))
   .pipe(gulp.dest("app/css"));
 });
 
@@ -87,12 +87,13 @@ gulp.task("build", ["styles", "scripts", "images", "html"], function () {
   .pipe(gulp.dest("dist/img"))
   .pipe($.size({title: "build images", gzip: true}));
 
-  gulp.src(["app/css/**"], { dot: true })
+  gulp.src([".tmp/css/**"], { dot: true })
   .pipe($.plumber())
+  .pipe($.if("*.css", $.csso()))
   .pipe(gulp.dest("dist/css"))
   .pipe($.size({title: "build css", gzip: true}));
 
-  gulp.src(["app/js/**"], { dot: true })
+  gulp.src([".tmp/js/**"], { dot: true })
   .pipe($.plumber())
   .pipe(gulp.dest("dist/js"))
   .pipe($.size({title: "build js", gzip: true}));
