@@ -21,6 +21,7 @@
     "gulp-plumber": ">=0.6.3",
     "gulp-ruby-sass": ">=0.7.1",
     "gulp-sourcemaps": ">=1.2.8",
+    "gulp-usemin": ">=0.3.8",
     "gulp-util": ">=3.0.0",
     "jshint-stylish": ">=1.0.0",
     "lazypipe": ">=0.2.2",
