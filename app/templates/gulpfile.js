@@ -5,26 +5,24 @@ var gulp = require("gulp");
 var $ = require("gulp-load-plugins")();
 var fileinclude = require("gulp-file-include");
 var wiredep = require("wiredep").stream;
-var usemin = require("gulp-usemin");
 
 gulp.task("clean", require("del").bind(null, [".tmp", "dist"]));
 
 gulp.task("html", function() {
   return gulp.src(["app/*.html"])
+  .pipe($.plumber())
   .pipe(fileinclude({prefix: "@@", basepath: "app/partials/"}))
   .pipe(wiredep({directory: "app/bower_components"}))
-  .pipe(usemin())
+  .pipe($.usemin())
   .pipe(gulp.dest(".tmp/"));
 });
 
 gulp.task("styles", function () {
   return gulp.src("app/sass/*.scss")
   .pipe($.plumber())
-  .pipe($.rubySass({
-    style: "expanded",
-    precision: 10
-  }))
+  .pipe($.rubySass({style: "expanded", precision: 10}))
   .pipe($.autoprefixer({browsers: ["last 1 version"]}))
+  .pipe($.if("*.css", $.csso()))
   .pipe(gulp.dest("app/css"));
 });
 
@@ -40,6 +38,7 @@ gulp.task("scripts", function() {
 
 gulp.task("images", function () {
   return gulp.src("app/images/**/*")
+  .pipe($.plumber())
   .pipe($.cache($.imagemin({progressive: true, interlaced: true})))
   .pipe(gulp.dest("app/img"));
 });
@@ -76,7 +75,7 @@ gulp.task("watch", ["serve"], function () {
   gulp.watch("app/coffeescript/**/*.coffee", ["scripts"]).on("change", $.livereload.changed);
 });
 
-gulp.task("build", ["clean", "html", "styles", "scripts", "images"], function () {
+gulp.task("build", ["html", "styles", "scripts", "images"], function () {
 
   gulp.src([".tmp/*.html"], { dot: true })
   .pipe(gulp.dest("dist"));
