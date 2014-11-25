@@ -6,6 +6,13 @@ var $ = require("gulp-load-plugins")();
 
 gulp.task("clean", require("del").bind(null, [".tmp", "dist"]));
 
+gulp.task("html", function() {
+  var fileinclude = require("gulp-file-include");
+  return gulp.src(["app/*.html"])
+    .pipe(fileinclude({prefix: "@@", basepath: "app/partials/"}))
+    .pipe(gulp.dest(".tmp/"));
+});
+
 gulp.task("styles", function () {
   return gulp.src("app/sass/main.scss")
     .pipe($.plumber())
@@ -27,17 +34,16 @@ gulp.task("scripts", function() {
     .pipe(gulp.dest(".tmp/js"))
 })
 
-gulp.task("connect", ["styles", "scripts"], function () {
+gulp.task("connect", ["html", "styles", "scripts"], function () {
   var serveStatic = require('serve-static');
   var serveIndex = require('serve-index');
   var app = require("connect")()
     .use(require("connect-livereload")({port: 35729}))
-    .use(serveStatic("app"))
     .use(serveStatic(".tmp"))
     // paths to bower_components should be relative to the current file
     // e.g. in app/index.html you should use ../bower_components
     .use("/bower_components", serveStatic("bower_components"))
-    .use(serveIndex("app"));
+    .use(serveIndex(".tmp"));
 
   require("http").createServer(app)
     .listen(9000)
