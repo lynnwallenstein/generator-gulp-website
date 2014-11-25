@@ -90,7 +90,6 @@ gulp.task("watch", ["serve"], function () {
 
   });
 
-  gulp.task("default", ["clean"], function () {
+  gulp.task("default", function () {
     gulp.start("build");
   });
-  
