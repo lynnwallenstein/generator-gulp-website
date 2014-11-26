@@ -40,9 +40,7 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
     app: function () {
       this.dest.mkdir("app");
       this.dest.mkdir("app/partials");
-      this.dest.mkdir("app/img");
-      this.dest.mkdir("app/css");
-      this.dest.mkdir("app/js");
+      this.dest.mkdir("app/images");
       this.dest.mkdir("app/fonts");
 
       this.directory("_partials", "app/partials");
