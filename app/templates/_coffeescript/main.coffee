@@ -1,3 +1,6 @@
 # CoffeeScript
 
-console.log("Hello World!");
+$ ->
+  # Remove Preload so that transitions work after page loads
+  $("body").removeClass("preload");
+
