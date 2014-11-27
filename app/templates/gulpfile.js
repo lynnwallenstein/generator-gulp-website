@@ -67,7 +67,19 @@ gulp.task("fonts", function () {
 
 });
 
-gulp.task("connect", ["fonts", "images", "markup"], function () {
+gulp.task("extras", function () {
+
+  gulp.src("app/*.txt")
+  .pipe($.plumber())
+  .pipe(gulp.dest(".tmp/"));
+
+  gulp.src("app/*.ico")
+  .pipe($.plumber())
+  .pipe(gulp.dest(".tmp/"));
+
+});
+
+gulp.task("connect", ["extras", "fonts", "images", "markup"], function () {
   var serveStatic = require("serve-static");
   var serveIndex = require("serve-index");
   var app = require("connect")()
@@ -100,7 +112,7 @@ gulp.task("watch", ["serve"], function () {
   gulp.watch(".tmp/*").on("change", $.livereload.changed);
 });
 
-gulp.task("build", ["fonts", "images", "markup"], function () {
+gulp.task("build", ["extras", "fonts", "images", "markup"], function () {
 
   gulp.src([".tmp/*.html"], { dot: true })
     .pipe($.plumber())
@@ -127,6 +139,16 @@ gulp.task("build", ["fonts", "images", "markup"], function () {
     .pipe($.plumber())
     .pipe(gulp.dest("dist/fonts"))
     .pipe($.size({title: "build fonts", gzip: true}));
+
+  gulp.src([".tmp/*.ico"], { dot: true })
+    .pipe($.plumber())
+    .pipe(gulp.dest("dist/"))
+    .pipe($.size({title: "build favicons", gzip: true}));
+
+  gulp.src([".tmp/*.txt"], { dot: true })
+    .pipe($.plumber())
+    .pipe(gulp.dest("dist/"))
+    .pipe($.size({title: "build robots and humans", gzip: true}));
 
 });
 
