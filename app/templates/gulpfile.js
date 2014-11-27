@@ -79,7 +79,7 @@ gulp.task("extras", function () {
 
 });
 
-gulp.task("connect", ["extras", "fonts", "images", "markup"], function () {
+gulp.task("connect-files", ["extras", "fonts", "images", "markup"], function () {
   var serveStatic = require("serve-static");
   var serveIndex = require("serve-index");
   var app = require("connect")()
@@ -97,6 +97,10 @@ gulp.task("connect", ["extras", "fonts", "images", "markup"], function () {
   });
 });
 
+gulp.task("connect", ["clean"], function () {
+  gulp.start("connect-files");
+});
+
 gulp.task("serve", ["connect"], function () {
   require("opn")("http://localhost:9000");
 });
@@ -112,7 +116,12 @@ gulp.task("watch", ["serve"], function () {
   gulp.watch(".tmp/*").on("change", $.livereload.changed);
 });
 
-gulp.task("build", ["extras", "fonts", "images", "markup"], function () {
+gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
+
+  gulp.src(["bower_components/**"], { base: "." })
+    .pipe($.plumber())
+    .pipe(gulp.dest("dist/"))
+    .pipe($.size({title: "build bower", gzip: true}));
 
   gulp.src([".tmp/*.html"], { dot: true })
     .pipe($.plumber())
@@ -150,6 +159,10 @@ gulp.task("build", ["extras", "fonts", "images", "markup"], function () {
     .pipe(gulp.dest("dist/"))
     .pipe($.size({title: "build robots and humans", gzip: true}));
 
+});
+
+gulp.task("build", ["clean"], function () {
+  gulp.start("build-files");
 });
 
 gulp.task("default", function () {
