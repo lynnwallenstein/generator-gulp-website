@@ -2,9 +2,9 @@
   "name": "<%= appname %>",
   "version": "0.0.1",
   "dependencies": {
-    "normalize-css": "latest",
+    "compass-breakpoint": "latest",
     "jquery": "latest",
     "modernizr": "latest",
-    "compass-breakpoint": "latest"
+    "normalize-css": "latest"
   }
 }
