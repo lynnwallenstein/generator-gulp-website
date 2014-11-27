@@ -1,0 +1,13 @@
+// ------------------------------------------------------------------
+//  Nests
+// ------------------------------------------------------------------
+
+%nested {
+  padding-left: calc(50% - #{$nested-margin});
+  padding-right: calc(50% - #{$nested-margin});
+}
+
+%nested-margin {
+  margin-left: calc(50% - #{$nested-margin});
+  margin-right: calc(50% - #{$nested-margin});
+}

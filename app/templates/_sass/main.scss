@@ -9,13 +9,15 @@
 
 // Dependencies
 // ------------------------------------------------------------------
-@import "dependencies/extends/non-semantic-helpers";
-@import "dependencies/extends/shortcuts";
 @import "dependencies/variables/colors";
 @import "dependencies/variables/paths";
 @import "dependencies/variables/sizes";
 @import "dependencies/variables/typography";
 @import "dependencies/variables/z-index";
+
+@import "dependencies/extends/nests";
+@import "dependencies/extends/non-semantic-helpers";
+@import "dependencies/extends/shortcuts";
 
 // Default
 // ------------------------------------------------------------------
