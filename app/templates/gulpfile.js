@@ -3,9 +3,10 @@
 
 var gulp = require("gulp");
 var $ = require("gulp-load-plugins")();
-var gutil = require("gulp-util")
-var fileinclude = require("gulp-file-include")
+var gutil = require("gulp-util");
+var fileinclude = require("gulp-file-include");
 var wiredep = require("wiredep").stream;
+var markdown = require("markdown");
 
 gulp.task("clean", require("del").bind(null, [".tmp", "dist"]));
 
@@ -37,7 +38,13 @@ gulp.task("markup", ["styles", "scripts"], function () {
 
   return gulp.src(["app/*.html"])
     .pipe($.plumber())
-    .pipe(fileinclude({prefix: "@@", basepath: "app/partials/"}))
+    .pipe(fileinclude({
+      prefix: "@@",
+      basepath: "app/partials/",
+      filters: {
+        markdown: markdown.parse
+      }
+    }))
     .pipe(wiredep({directory: "bower_components"}))
     .pipe($.usemin({
       css: [$.minifyCss(), $.rev()],
@@ -70,35 +77,31 @@ gulp.task("fonts", function () {
 gulp.task("extras", function () {
 
   gulp.src("app/*.txt")
-  .pipe($.plumber())
-  .pipe(gulp.dest(".tmp/"));
+    .pipe($.plumber())
+    .pipe(gulp.dest(".tmp/"));
 
   gulp.src("app/*.ico")
-  .pipe($.plumber())
-  .pipe(gulp.dest(".tmp/"));
+    .pipe($.plumber())
+    .pipe(gulp.dest(".tmp/"));
 
 });
 
-gulp.task("connect-files", ["extras", "fonts", "images", "markup"], function () {
+gulp.task("connect", ["extras", "fonts", "images", "markup"], function () {
   var serveStatic = require("serve-static");
   var serveIndex = require("serve-index");
   var app = require("connect")()
-  .use(require("connect-livereload")({port: 35729}))
-  .use(serveStatic(".tmp"))
-  // paths to bower_components should be relative to the current file
-  // e.g. in app/index.html you should use ../bower_components
-  .use("/bower_components", serveStatic("bower_components"))
-  .use(serveIndex(".tmp"));
+    .use(require("connect-livereload")({port: 35729}))
+    .use(serveStatic(".tmp"))
+    // paths to bower_components should be relative to the current file
+    // e.g. in app/index.html you should use ../bower_components
+    .use("/bower_components", serveStatic("bower_components"))
+    .use(serveIndex(".tmp"));
 
   require("http").createServer(app)
   .listen(9000)
   .on("listening", function () {
     console.log("Started connect web server on http://localhost:9000");
   });
-});
-
-gulp.task("connect", ["clean"], function () {
-  gulp.start("connect-files");
 });
 
 gulp.task("serve", ["connect"], function () {
