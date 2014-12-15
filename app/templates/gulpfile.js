@@ -7,6 +7,7 @@ var gutil = require("gulp-util");
 var fileinclude = require("gulp-file-include");
 var wiredep = require("wiredep").stream;
 var markdown = require("markdown");
+var shell = require("gulp-shell")
 
 gulp.task("clean", require("del").bind(null, [".tmp", "dist"]));
 
@@ -26,9 +27,6 @@ gulp.task("scripts", function() {
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.coffee({bare: true}).on("error", gutil.log))
-    .pipe($.jshint())
-    .pipe($.jshint.reporter("jshint-stylish"))
-    .pipe($.jshint.reporter("fail"))
     .pipe($.sourcemaps.write())
     .pipe(gulp.dest("app/js"));
 
@@ -52,6 +50,12 @@ gulp.task("markup", ["styles", "scripts"], function () {
       js: [$.uglify(), $.rev()]
     }))
     .pipe(gulp.dest(".tmp/"));
+
+    return gulp.src(".tmp/js/**")
+      .pipe($.plumber())
+      .pipe($.jshint())
+      .pipe($.jshint.reporter("jshint-stylish"))
+      .pipe($.jshint.reporter("fail"))
 
 });
 
@@ -107,9 +111,12 @@ gulp.task("connect", ["extras", "fonts", "images", "markup"], function () {
 gulp.task("serve", ["connect"], function () {
   require("opn")("http://localhost:9000");
 });
-;
 
-gulp.task("watch", ["serve"], function () {
+gulp.task("editor", shell.task(["atom ."]))
+
+gulp.task("git", shell.task(["gittower ."]))
+
+gulp.task("watch", ["editor", "git", "serve"], function () {
   $.livereload.listen();
   gulp.watch(["app/sass/**"], ["markup"]);
   gulp.watch(["app/*.html"], ["markup"]);
