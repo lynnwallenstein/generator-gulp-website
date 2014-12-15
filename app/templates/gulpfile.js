@@ -128,7 +128,7 @@ gulp.task("watch", ["editor", "git", "serve"], function () {
 
 gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
 
-  gulp.src(["bower_components/**"], { base: "." })
+  gulp.src(["bower_components/**/*.{jpg,jpeg,gif,ico,svg,png,css,js}"], { base: "." })
     .pipe($.plumber())
     .pipe(gulp.dest("dist/"))
     .pipe($.size({title: "build bower", gzip: true}));
