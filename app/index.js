@@ -3,7 +3,7 @@ var util = require("util");
 var path = require("path");
 var yeoman = require("yeoman-generator");
 var yosay = require("yosay");
-var wiredep = require('wiredep');
+var wiredep = require("wiredep");
 
 var GulpWebsiteGenerator = yeoman.generators.Base.extend({
 
