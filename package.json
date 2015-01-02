@@ -11,7 +11,7 @@
     "url": "https://github.com/lynnwallenstein"
   },
   "engines": {
-    "node": ">=0.10.35"
+    "node": "latest"
   },
   "scripts": {
     "test": "mocha"
@@ -23,15 +23,15 @@
     "yeoman-generator"
   ],
   "dependencies": {
-    "yeoman-generator": "^0.18.5",
-    "chalk": "^0.5.1",
-    "yosay": "^1.0.1",
-    "wiredep": "^2.2.2"
+    "yeoman-generator": "latest",
+    "chalk": "latest",
+    "yosay": "latest",
+    "wiredep": "latest"
   },
   "devDependencies": {
     "mocha": "*"
   },
   "peerDependencies": {
-    "yo": ">=1.3.3"
+    "yo": "latest"
   }
 }
