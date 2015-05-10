@@ -51,13 +51,15 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
       this.copy("robots.txt",     "app/robots.txt");
       this.copy("humans.txt",     "app/humans.txt");
 
-      this.copy("gitignore",      ".gitignore");
-      this.copy("gitattributes",  ".gitattributes");
-      this.copy("editorconfig",   ".editorconfig");
-      this.copy("jshintrc",       ".jshintrc");
-      this.copy("_scss-lint.yml", ".scss-lint.yml");
-      this.copy("_package.json",  "package.json");
-      this.copy("bowerrc",        ".bowerrc");
+      this.copy("_Gemfile",        "Gemfile");
+      this.copy("_gitignore",      ".gitignore");
+      this.copy("_gitattributes",  ".gitattributes");
+      this.copy("_editorconfig",   ".editorconfig");
+      this.copy("_jshintrc",       ".jshintrc");
+      this.copy("_ruby-version",   ".ruby-version");
+      this.copy("_scss-lint.yml",  ".scss-lint.yml");
+      this.copy("_package.json",   "package.json");
+      this.copy("_bowerrc",        ".bowerrc");
     },
 
     writeBower: function () {
