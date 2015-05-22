@@ -1,13 +1,12 @@
 "use strict";
-var util = require("util");
-var path = require("path");
+var join = require('path').join;
 var yeoman = require("yeoman-generator");
 var yosay = require("yosay");
-var wiredep = require("wiredep");
+var chalk = require('chalk');
 
-var GulpWebsiteGenerator = yeoman.generators.Base.extend({
-
-  initializing: function () {
+module.exports = yeoman.generators.Base.extend({
+  constructor: function () {
+    yeoman.generators.Base.apply(this, arguments);
     this.pkg = require("../package.json");
   },
 
@@ -31,49 +30,39 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
     }.bind(this));
   },
 
-  writing: {
+  gulpfile: function() {
+    this.template("gulpfile.js");
+  },
 
-    gulpfile: function() {
-      this.template("gulpfile.js");
-    },
+  app: function () {
+    this.directory("app");
+    this.mkdir("app/images");
+    this.mkdir("app/fonts");
 
-    app: function () {
-      this.dest.mkdir("app");
-      this.dest.mkdir("app/partials");
-      this.dest.mkdir("app/images");
-      this.dest.mkdir("app/fonts");
+    this.directory("_partials", "app/partials");
+    this.directory("_sass", "app/sass");
+    this.directory("_coffeescript", "app/coffeescript");
 
-      this.directory("_partials", "app/partials");
-      this.directory("_sass", "app/sass");
-      this.directory("_coffeescript", "app/coffeescript");
+    this.copy("favicon.ico",      "app/favicon.ico");
+    this.copy("robots.txt",       "app/robots.txt");
+    this.copy("humans.txt",       "app/humans.txt");
+    this.copy("_Gemfile",         "Gemfile");
+    this.copy("_gitignore",       ".gitignore");
+    this.copy("_gitattributes",   ".gitattributes");
+    this.copy("_editorconfig",    ".editorconfig");
+    this.copy("_jshintrc",        ".jshintrc");
+    this.copy("_ruby-version",    ".ruby-version");
+    this.copy("_scss-lint.yml",   ".scss-lint.yml");
+    this.copy("_package.json",    "package.json");
+    this.copy("_bowerrc",         ".bowerrc");
+  },
 
-      this.copy("favicon.ico",    "app/favicon.ico");
-      this.copy("robots.txt",     "app/robots.txt");
-      this.copy("humans.txt",     "app/humans.txt");
+  writeBower: function () {
+    this.template("_bower.json", "bower.json");
+  },
 
-      this.copy("_Gemfile",        "Gemfile");
-      this.copy("_gitignore",      ".gitignore");
-      this.copy("_gitattributes",  ".gitattributes");
-      this.copy("_editorconfig",   ".editorconfig");
-      this.copy("_jshintrc",       ".jshintrc");
-      this.copy("_ruby-version",   ".ruby-version");
-      this.copy("_scss-lint.yml",  ".scss-lint.yml");
-      this.copy("_package.json",   "package.json");
-      this.copy("_bowerrc",        ".bowerrc");
-    },
-
-    writeBower: function () {
-      this.bowerFile = this.src.read("_bower.json");
-      this.bowerFile = this.engine(this.bowerFile, this);
-      this.write("bower.json", this.bowerFile);
-    },
-
-    writeIndex: function () {
-      this.indexFile = this.src.read("index.html");
-      this.indexFile = this.engine(this.indexFile, this);
-      this.write("app/index.html", this.indexFile);
-    }
-
+  writeIndex: function () {
+    this.template("index.html", "app/index.html");
   },
 
   end: function () {
@@ -81,5 +70,3 @@ var GulpWebsiteGenerator = yeoman.generators.Base.extend({
   }
 
 });
-
-module.exports = GulpWebsiteGenerator;
