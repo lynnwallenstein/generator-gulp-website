@@ -1,24 +1,32 @@
 /* jshint node:true */
 "use strict";
 
-var gulp = require("gulp");
-var $ = require("gulp-load-plugins")();
-var gutil = require("gulp-util");
+var gulp        = require("gulp");
+var $           = require("gulp-load-plugins")();
 var fileinclude = require("gulp-file-include");
-var wiredep = require("wiredep").stream;
-var markdown = require("markdown");
-var shell = require("gulp-shell")
+var gulpif      = require("gulp-if");
+var gutil       = require("gulp-util");
+var markdown    = require("markdown");
+var notify      = require("gulp-notify");
+var sass        = require("gulp-ruby-sass");
+var shell       = require("gulp-shell");
+var useref      = require("gulp-useref");
+var wiredep     = require("wiredep").stream;
 
-gulp.task("clean", require("del").bind(null, [".tmp", "dist"]));
+
+gulp.task("clean", function () {
+    return gulp.src([".tmp", "dist"], { read: false }).pipe($.rimraf({ force: true }));
+});
 
 gulp.task("styles", function () {
-
-  return gulp.src("app/sass/*.scss")
-    .pipe($.plumber())
-    .pipe($.rubySass({style: "expanded", precision: 10}))
-    .pipe($.autoprefixer({browsers: ["last 3 versions"]}))
-    .pipe(gulp.dest("app/css"));
-
+    return sass("app/styles/main.scss", { style: "expanded" }).on("error", errorHandler)
+      .pipe(notify({ message: "Sass" }))
+      .pipe($.autoprefixer("last 3 version"))
+      .pipe(notify({ message: "Autoprefixing" }))
+      .pipe(gulp.dest(".tmp/styles"))
+      .pipe(notify({ message: "Copying Files" }))
+      .pipe($.size())
+      .pipe(notify({ message: "Styles Complete" }));
 });
 
 gulp.task("scripts", function() {
@@ -178,3 +186,9 @@ gulp.task("build", ["clean"], function () {
 gulp.task("default", function () {
   gulp.start("build");
 });
+
+// Handle the error
+function errorHandler (error) {
+  console.log(error.toString());
+  this.emit("end");
+}

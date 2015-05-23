@@ -22,6 +22,7 @@
     "gulp-livereload": "latest",
     "gulp-minify-css": "latest",
     "gulp-minify-html": "latest",
+    "gulp-notify": "latest",
     "gulp-plumber": "latest",
     "gulp-rev": "latest",
     "gulp-ruby-sass": "latest",
@@ -30,6 +31,7 @@
     "gulp-sourcemaps": "latest",
     "gulp-usemin": "latest",
     "gulp-uglify": "latest",
+    "gulp-useref": "latest",
     "gulp-util": "latest",
     "jshint-stylish": "latest",
     "lazypipe": "latest",
@@ -39,5 +41,8 @@
     "serve-index": "latest",
     "serve-static": "latest",
     "wiredep": "latest"
+  },
+  "engines": {
+    "node": ">=0.10.0"
   }
 }
