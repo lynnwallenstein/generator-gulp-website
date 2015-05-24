@@ -13,6 +13,7 @@ var minifyHtml  = require("gulp-minify-html");
 var minifyCss   = require("gulp-minify-css");
 var notify      = require("gulp-notify");
 var rev         = require("gulp-rev");
+var rimraf      = require("gulp-rimraf");
 var sass        = require("gulp-ruby-sass");
 var shell       = require("gulp-shell");
 var size        = require("gulp-size");
@@ -23,7 +24,8 @@ var usemin      = require("gulp-usemin");
 var uglify      = require("gulp-uglify");
 
 gulp.task("clean", function () {
-    return gulp.src([".tmp", "dist"], { read: false }).pipe($.rimraf({ force: true }));
+  return gulp.src([".tmp", "dist"], { read: false })
+    .pipe(rimraf({ force: true }));
 });
 
 gulp.task("styles", function () {

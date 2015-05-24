@@ -25,6 +25,7 @@
     "gulp-notify": "latest",
     "gulp-plumber": "latest",
     "gulp-rev": "latest",
+    "gulp-rimraf": "latest",
     "gulp-ruby-sass": "latest",
     "gulp-size": "latest",
     "gulp-shell": "latest",
