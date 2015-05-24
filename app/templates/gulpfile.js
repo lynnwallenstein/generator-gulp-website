@@ -5,6 +5,7 @@ var gulp        = require("gulp");
 var $           = require("gulp-load-plugins")();
 
 var coffee      = require("gulp-coffee");
+var csso        = require("gulp-csso");
 var fileinclude = require("gulp-file-include");
 var gulpif      = require("gulp-if");
 var gutil       = require("gulp-util");
@@ -50,7 +51,7 @@ gulp.task("scripts", function() {
     .pipe(notify({ message: "Compiled CoffeeScript" }))
     .pipe(sourcemaps.write()).on("error", errorHandler)
     .pipe(notify({ message: "Writing Sourcemaps" }))
-    .pipe(gulp.dest("app/js"))
+    .pipe(gulp.dest(".tmp/js"))
     .pipe(notify({ message: "Copyting to app/js" }))
     .pipe(size());
 
@@ -176,13 +177,13 @@ gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
     .pipe(gulp.dest("dist/img"))
     .pipe($.size({title: "build images", gzip: true}));
 
-  gulp.src([".tmp/css/*-*.css"], { dot: true })
+  gulp.src([".tmp/css/*.css"], { dot: true })
     .pipe($.plumber())
     .pipe($.if("*.css", $.csso()))
     .pipe(gulp.dest("dist/css"))
     .pipe($.size({title: "build css", gzip: true}));
 
-  gulp.src([".tmp/js/*-*.js"], { dot: true })
+  gulp.src([".tmp/js/*.js"], { dot: true })
     .pipe($.plumber())
     .pipe(gulp.dest("dist/js"))
     .pipe($.size({title: "build js", gzip: true}));
