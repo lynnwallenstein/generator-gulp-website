@@ -165,7 +165,7 @@ gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
   gulp.src([".tmp/*.html"], { dot: true })
     .pipe($.plumber())
     .pipe(usemin({
-      css: [minifyCss(), rev()],
+      css: [minifyCss(), "concat"],
       html: [minifyHtml({empty: true})],
       js: [uglify(), rev()],
       inlinejs: [uglify()],
