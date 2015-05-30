@@ -15,7 +15,10 @@ var minifyHtml  = require("gulp-minify-html");
 var minifyCss   = require("gulp-minify-css");
 var notify      = require("gulp-notify");
 var rev         = require("gulp-rev");
+var rimraf      = require("gulp-rimraf");
 var sass        = require("gulp-ruby-sass");
+var serveStatic = require("serve-static");
+var serveIndex  = require("serve-index");
 var shell       = require("gulp-shell");
 var size        = require("gulp-size");
 var sourcemaps  = require("gulp-sourcemaps");
@@ -26,9 +29,7 @@ var uglify      = require("gulp-uglify");
 
 gulp.task("clean", function () {
 
-  return del([".tmp", "dist"], function (err, paths) {
-      console.log("Deleted files/folders:\n", paths.join("\n"));
-  });
+  del([".tmp", "dist"])
 
 });
 
@@ -116,8 +117,6 @@ gulp.task("extras", function () {
 });
 
 gulp.task("connect", ["extras", "fonts", "images", "markup"], function () {
-  var serveStatic = require("serve-static");
-  var serveIndex = require("serve-index");
   var app = require("connect")()
     .use(require("connect-livereload")({port: 35729}))
     .use(serveStatic(".tmp"))
@@ -208,8 +207,27 @@ gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
 
 });
 
-gulp.task("build", ["clean"], function () {
+gulp.task("build-prep", ["clean"], function () {
+
   gulp.start("build-files");
+
+});
+
+gulp.task("build-test-server", ["build-prep"], function () {
+  var app = require("connect")()
+    .use(serveStatic("dist"))
+    .use(serveIndex("dist"));
+
+  require("http").createServer(app)
+    .listen(9001)
+    .on("listening", function () {
+      console.log("Started build test server on http://localhost:9001");
+    });
+
+});
+
+gulp.task("build", ["build-test-server"], function () {
+  require("opn")("http://localhost:9001");
 });
 
 gulp.task("default", function () {
