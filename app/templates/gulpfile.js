@@ -6,6 +6,7 @@ var $           = require("gulp-load-plugins")();
 
 var coffee      = require("gulp-coffee");
 var csso        = require("gulp-csso");
+var del         = require("del");
 var fileinclude = require("gulp-file-include");
 var gulpif      = require("gulp-if");
 var gutil       = require("gulp-util");
@@ -14,7 +15,6 @@ var minifyHtml  = require("gulp-minify-html");
 var minifyCss   = require("gulp-minify-css");
 var notify      = require("gulp-notify");
 var rev         = require("gulp-rev");
-var rimraf      = require("gulp-rimraf");
 var sass        = require("gulp-ruby-sass");
 var shell       = require("gulp-shell");
 var size        = require("gulp-size");
@@ -25,8 +25,11 @@ var usemin      = require("gulp-usemin");
 var uglify      = require("gulp-uglify");
 
 gulp.task("clean", function () {
-  return gulp.src([".tmp", "dist"], { read: false })
-    .pipe(rimraf({ force: true }));
+
+  return del([".tmp", "dist"], function (err, paths) {
+      console.log("Deleted files/folders:\n", paths.join("\n"));
+  });
+
 });
 
 gulp.task("styles", function () {
