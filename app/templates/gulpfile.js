@@ -15,7 +15,6 @@ var minifyHtml  = require("gulp-minify-html");
 var minifyCss   = require("gulp-minify-css");
 var notify      = require("gulp-notify");
 var rev         = require("gulp-rev");
-var rimraf      = require("gulp-rimraf");
 var sass        = require("gulp-ruby-sass");
 var serveStatic = require("serve-static");
 var serveIndex  = require("serve-index");
