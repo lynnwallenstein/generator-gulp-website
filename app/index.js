@@ -1,8 +1,8 @@
 "use strict";
-var join   = require('path').join;
+var join   = require("path").join;
 var yeoman = require("yeoman-generator");
 var yosay  = require("yosay");
-var chalk  = require('chalk');
+var chalk  = require("chalk");
 
 module.exports = yeoman.generators.Base.extend({
   constructor: function () {
