@@ -7,6 +7,7 @@ var $           = require("gulp-load-plugins")();
 var coffee      = require("gulp-coffee");
 var csso        = require("gulp-csso");
 var del         = require("del");
+var debug       = require("gulp-debug")
 var fileinclude = require("gulp-file-include");
 var gulpif      = require("gulp-if");
 var gutil       = require("gulp-util");
@@ -14,7 +15,6 @@ var markdown    = require("markdown");
 var minifyHtml  = require("gulp-minify-html");
 var minifyCss   = require("gulp-minify-css");
 var notify      = require("gulp-notify");
-var rev         = require("gulp-rev");
 var sass        = require("gulp-ruby-sass");
 var serveStatic = require("serve-static");
 var serveIndex  = require("serve-index");
@@ -25,6 +25,7 @@ var useref      = require("gulp-useref");
 var wiredep     = require("wiredep").stream;
 var usemin      = require("gulp-usemin");
 var uglify      = require("gulp-uglify");
+var using       = require("gulp-using");
 
 gulp.task("clean", function () {
 
@@ -35,8 +36,9 @@ gulp.task("clean", function () {
 gulp.task("styles", function () {
 
   return sass("app/sass/main.scss", { style: "expanded" })
+    .pipe(using())
     .pipe(notify({ message: "Compiled Sass" }))
-    .pipe($.autoprefixer("last 3 version")).on("error", errorHandler)
+    .pipe($.autoprefixer("last 3 versions")).on("error", errorHandler)
     .pipe(notify({ message: "Autoprefixed" }))
     .pipe(gulp.dest(".tmp/css"))
     .pipe(notify({ message: "Copying to Temp Directory" }))
@@ -48,6 +50,7 @@ gulp.task("styles", function () {
 gulp.task("scripts", function() {
 
   return gulp.src("app/coffeescript/*.coffee")
+    .pipe(using())
     .pipe(sourcemaps.init()).on("error", errorHandler)
     .pipe(notify({ message: "Sourcemaps Initialized" }))
     .pipe(coffee({bare: true})).on("error", errorHandler)
@@ -62,7 +65,8 @@ gulp.task("scripts", function() {
 
 gulp.task("markup", ["styles", "scripts"], function () {
 
-  return gulp.src(["app/*.html"])
+  gulp.src(["app/*.html"])
+    .pipe(using())
     .pipe($.plumber())
     .pipe(fileinclude({
       prefix: "@@",
@@ -76,7 +80,8 @@ gulp.task("markup", ["styles", "scripts"], function () {
     .pipe(notify({ message: "Wiring Up Bower Components" }))
     .pipe(gulp.dest(".tmp/"));
 
-  return gulp.src(".tmp/js/**")
+  gulp.src(".tmp/js/**")
+    .pipe(using())
     .pipe($.plumber())
     .pipe($.jshint())
     .pipe($.jshint.reporter("jshint-stylish"))
@@ -87,6 +92,7 @@ gulp.task("markup", ["styles", "scripts"], function () {
 gulp.task("images", function () {
 
   return gulp.src("app/images/**/*")
+    .pipe(using())
     .pipe($.plumber())
     .pipe($.cache($.imagemin({progressive: true, interlaced: true}))).on("error", errorHandler)
     .pipe(gulp.dest(".tmp/img"));
@@ -96,6 +102,7 @@ gulp.task("images", function () {
 gulp.task("fonts", function () {
 
   return gulp.src(require("main-bower-files")().concat("app/fonts/**/*"))
+    .pipe(using())
     .pipe($.plumber())
     .pipe($.filter("**/*.{eot,svg,ttf,woff}")).on("error", errorHandler)
     .pipe($.flatten())
@@ -106,10 +113,12 @@ gulp.task("fonts", function () {
 gulp.task("extras", function () {
 
   gulp.src("app/*.txt")
+    .pipe(using())
     .pipe($.plumber())
     .pipe(gulp.dest(".tmp/"));
 
   gulp.src("app/*.ico")
+    .pipe(using())
     .pipe($.plumber())
     .pipe(gulp.dest(".tmp/"));
 
@@ -156,50 +165,58 @@ gulp.task("watch", ["editor", "git", "serve"], function () {
 
 gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
 
-  gulp.src(["bower_components/**/*.{jpg,jpeg,gif,ico,svg,png,css,js}"], { base: "." })
+  gulp.src(["bower_components/**/*.{jpg,jpeg,gif,ico,svg,png}"], { base: "." })
+    .pipe(using())
     .pipe($.plumber())
     .pipe(gulp.dest("dist/"))
     .pipe($.size({title: "build bower", gzip: true}));
 
   gulp.src([".tmp/*.html"], { dot: true })
+    .pipe(using())
     .pipe($.plumber())
     .pipe(usemin({
-      css: [minifyCss(), "concat", rev()],
+      css: [minifyCss, "concat"],
       html: [minifyHtml({empty: true})],
-      js: [uglify(), rev()],
-      inlinejs: [uglify()],
-      inlinecss: [minifyCss(), "concat"]
+      js: [uglify],
+      inlinejs: [uglify],
+      inlinecss: [minifyCss, "concat"]
     })).on("error", errorHandler)
     .pipe(gulp.dest("dist"))
     .pipe($.size({title: "build html", gzip: true}));
 
   gulp.src([".tmp/img/**"], { dot: true })
+    .pipe(using())
     .pipe($.plumber())
     .pipe(gulp.dest("dist/img"))
     .pipe($.size({title: "build images", gzip: true}));
 
   gulp.src([".tmp/css/*.css"], { dot: true })
+    .pipe(using())
     .pipe($.plumber())
     .pipe($.if("*.css", $.csso()))
     .pipe(gulp.dest("dist/css"))
     .pipe($.size({title: "build css", gzip: true}));
 
   gulp.src([".tmp/js/*.js"], { dot: true })
+    .pipe(using())
     .pipe($.plumber())
     .pipe(gulp.dest("dist/js"))
     .pipe($.size({title: "build js", gzip: true}));
 
   gulp.src([".tmp/fonts/**"], { dot: true })
+    .pipe(using())
     .pipe($.plumber())
     .pipe(gulp.dest("dist/fonts"))
     .pipe($.size({title: "build fonts", gzip: true}));
 
   gulp.src([".tmp/*.ico"], { dot: true })
+    .pipe(using())
     .pipe($.plumber())
     .pipe(gulp.dest("dist/"))
     .pipe($.size({title: "build favicons", gzip: true}));
 
   gulp.src([".tmp/*.txt"], { dot: true })
+    .pipe(using())
     .pipe($.plumber())
     .pipe(gulp.dest("dist/"))
     .pipe($.size({title: "build robots and humans", gzip: true}));
