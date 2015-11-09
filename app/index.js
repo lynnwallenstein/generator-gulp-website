@@ -36,12 +36,12 @@ module.exports = yeoman.generators.Base.extend({
 
   app: function () {
     this.directory("app");
-    this.mkdir("app/images");
-    this.mkdir("app/fonts");
 
     this.directory("_partials", "app/partials");
     this.directory("_sass", "app/sass");
     this.directory("_coffeescript", "app/coffeescript");
+    this.directory("_images", "app/images");
+    this.directory("_fonts", "app/fonts");
 
     this.copy("favicon.ico",      "app/favicon.ico");
     this.copy("robots.txt",       "app/robots.txt");
