@@ -83,9 +83,9 @@ gulp.task("markup", ["styles", "scripts"], function () {
   gulp.src(".tmp/js/**")
     .pipe(using())
     .pipe($.plumber())
-    .pipe($.jshint())
-    .pipe($.jshint.reporter("jshint-stylish"))
-    .pipe($.jshint.reporter("fail"))
+    //.pipe($.jshint())
+    //.pipe($.jshint.reporter("jshint-stylish"))
+    //.pipe($.jshint.reporter("fail"))
     .pipe(browserSync.stream());
 
 });
@@ -130,7 +130,7 @@ gulp.task("extras", function () {
 });
 
 // Static Server + watching scss/html files
-gulp.task("connect", ["extras", "fonts", "images", "markup"], function() {
+gulp.task("watch", ["extras", "fonts", "images", "markup", "editor", "git", "open-browser"], function() {
 
     browserSync.init({
       server: ".tmp",
@@ -146,7 +146,7 @@ gulp.task("connect", ["extras", "fonts", "images", "markup"], function() {
 
 });
 
-gulp.task("serve", ["connect"], function () {
+gulp.task("open-browser", function () {
   require("opn")("http://localhost:9000");
 });
 
@@ -158,15 +158,6 @@ gulp.task("git", shell.task([
   "gittower ."
 ]));
 
-gulp.task("watch", ["editor", "git", "serve"], function () {
-  $.livereload.listen();
-  gulp.watch(["app/sass/**"], ["markup"]);
-  gulp.watch(["app/*.html"], ["markup"]);
-  gulp.watch(["app/partials/**"], ["markup"]);
-  gulp.watch(["app/coffeescript/**"], ["markup"]);
-  gulp.watch(["app/images/**"], ["images"]);
-  gulp.watch(".tmp/*").on("change", $.livereload.changed);
-});
 
 gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
 
@@ -249,7 +240,7 @@ gulp.task("build", ["build-test-server"], function () {
 });
 
 gulp.task("default", function () {
-  gulp.start("build");
+  gulp.start("watch");
 });
 
 // Handle the error
