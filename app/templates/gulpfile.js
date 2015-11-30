@@ -1,6 +1,36 @@
 /* jshint node:true */
 "use strict";
 
+var basePaths = {
+    src: "app/",
+    dev: ".tmp/"
+    dist: "dist/",
+    bower: "bower_components/"
+};
+
+var paths = {
+  images: {
+    src: basePaths.src + 'images/',
+    dev: basePaths.dev + 'img/',
+    dest: basePaths.dist + 'img/'
+  },
+  scripts: {
+    src: basePaths.src + 'coffeescript/',
+    dev: basePaths.dev + 'js/',
+    dest: basePaths.dist + 'js/'
+  },
+  styles: {
+    src: basePaths.src + 'sass/',
+    dev: basePaths.dev + 'css/',
+    dest: basePaths.dist + 'css/'
+  },
+  fonts: {
+    src: basePaths.src + 'fonts/',
+    dev: basePaths.dev + 'fonts/',
+    dest: basePaths.dist + 'fonts/'
+  }
+};
+
 var gulp        = require("gulp");
 var $           = require("gulp-load-plugins")();
 
@@ -28,19 +58,19 @@ var using       = require("gulp-using");
 
 gulp.task("clean", function () {
 
-  del([".tmp", "dist"])
+  del([basePaths.dev, basePaths.dist])
 
 });
 
 gulp.task("styles", function () {
 
-  return sass("app/sass/main.scss", { style: "expanded" })
+  return sass(paths.styles.src + "main.scss", { style: "expanded" })
     .pipe(using())
     .pipe(notify({ message: "Compiled Sass" }))
     .pipe($.autoprefixer("last 3 versions")).on("error", errorHandler)
     .pipe(notify({ message: "Autoprefixed" }))
-    .pipe(gulp.dest(".tmp/css"))
-    .pipe(notify({ message: "Copying to Temp Directory" }))
+    .pipe(gulp.dest(paths.styles.dev))
+    .pipe(notify({ message: "Copying to Dev Server Directory" }))
     .pipe(notify({ message: "Styles Complete!"} ))
     .pipe(size());
 
