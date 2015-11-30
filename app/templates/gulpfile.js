@@ -34,27 +34,25 @@ var paths = {
   }
 };
 
-var gulp        = require("gulp");
-var $           = require("gulp-load-plugins")();
+var gulp            = require("gulp");
+var $               = require("gulp-load-plugins")();
 
-var browserSync = require("browser-sync").create();
-var coffee      = require("gulp-coffee");
-var csso        = require("gulp-csso");
-var del         = require("del");
-var debug       = require("gulp-debug")
-var fileinclude = require("gulp-file-include");
-var gulpif      = require("gulp-if");
-var gutil       = require("gulp-util");
-var markdown    = require("markdown");
-var minifyHtml  = require("gulp-minify-html");
-var minifyCss   = require("gulp-minify-css");
-var sass        = require("gulp-ruby-sass");
-var shell       = require("gulp-shell");
-var sourcemaps  = require("gulp-sourcemaps");
-var useref      = require("gulp-useref");
-var wiredep     = require("wiredep").stream;
-var usemin      = require("gulp-usemin");
-var uglify      = require("gulp-uglify");
+var browserSync     = require("browser-sync").create();
+var del             = require("del");
+var debug           = require("gulp-debug")
+var fileinclude     = require("gulp-file-include");
+var gulpif          = require("gulp-if");
+var gutil           = require("gulp-util");
+var mainBowerFiles  = require('gulp-main-bower-files');
+var markdown        = require("markdown");
+var minifyHtml      = require("gulp-minify-html");
+var minifyCss       = require("gulp-minify-css");
+var sass            = require("gulp-ruby-sass");
+var shell           = require("gulp-shell");;
+var useref          = require("gulp-useref");
+var wiredep         = require("wiredep").stream;
+var usemin          = require("gulp-usemin");
+var uglify          = require("gulp-uglify");
 
 gulp.task("clean", function () {
 
@@ -80,11 +78,11 @@ gulp.task("scripts", function() {
 
   return gulp.src(paths.scripts.src + "*.coffee")
     .pipe($.using())
-    .pipe(sourcemaps.init()).on("error", errorHandler)
+    .pipe($.sourcemaps.init()).on("error", errorHandler)
     .pipe($.notify({ message: "Sourcemaps Initialized" }))
-    .pipe(coffee({bare: true})).on("error", errorHandler)
+    .pipe($.coffee({bare: true})).on("error", errorHandler)
     .pipe($.notify({ message: "Compiled CoffeeScript" }))
-    .pipe(sourcemaps.write()).on("error", errorHandler)
+    .pipe($.sourcemaps.write()).on("error", errorHandler)
     .pipe($.notify({ message: "Writing Sourcemaps" }))
     .pipe(gulp.dest(paths.scripts.dev))
     .pipe($.notify({ message: "Copyting to app/js" }))

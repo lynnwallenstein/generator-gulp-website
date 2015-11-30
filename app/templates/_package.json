@@ -38,7 +38,6 @@
     "jshint-stylish": "latest",
     "lazypipe": "latest",
     "markdown": "latest",
-    "opn": "latest",
     "wiredep": "latest"
   },
   "engines": {
