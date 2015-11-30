@@ -8,7 +8,6 @@
     "del": "latest",
     "gulp": "latest",
     "gulp-autoprefixer": "latest",
-    "gulp-cache": "latest",
     "gulp-coffee": "latest",
     "gulp-csso": "latest",
     "gulp-debug": "latest",
@@ -23,6 +22,7 @@
     "gulp-main-bower-files": "latest",
     "gulp-minify-css": "latest",
     "gulp-minify-html": "latest",
+    "gulp-newer": "latest",
     "gulp-notify": "latest",
     "gulp-plumber": "latest",
     "gulp-ruby-sass": "latest",
@@ -37,8 +37,7 @@
     "jshint": "latest",
     "jshint-stylish": "latest",
     "lazypipe": "latest",
-    "markdown": "latest",
-    "wiredep": "latest"
+    "markdown": "latest"
   },
   "engines": {
     "node": ">=0.10.0"

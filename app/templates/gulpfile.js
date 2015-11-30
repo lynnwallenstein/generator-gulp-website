@@ -41,6 +41,7 @@ var browserSync     = require("browser-sync").create();
 var del             = require("del");
 var debug           = require("gulp-debug")
 var fileinclude     = require("gulp-file-include");
+var gulpFilter      = require("gulp-filter");
 var gulpif          = require("gulp-if");
 var gutil           = require("gulp-util");
 var mainBowerFiles  = require('gulp-main-bower-files');
@@ -49,8 +50,6 @@ var minifyHtml      = require("gulp-minify-html");
 var minifyCss       = require("gulp-minify-css");
 var sass            = require("gulp-ruby-sass");
 var shell           = require("gulp-shell");;
-var useref          = require("gulp-useref");
-var wiredep         = require("wiredep").stream;
 var usemin          = require("gulp-usemin");
 var uglify          = require("gulp-uglify");
 
@@ -91,10 +90,11 @@ gulp.task("scripts", function() {
 })
 
 gulp.task("markup", ["styles", "scripts"], function () {
+  var assets = $.useref.assets({searchPath: paths.scripts.dev});
 
   gulp.src([basePaths.src + "*.html"])
     .pipe($.using())
-    .pipe($.plumber())
+    .pipe(assets)
     .pipe(fileinclude({
       prefix: "@@",
       basepath: paths.partials.dev,
@@ -103,7 +103,8 @@ gulp.task("markup", ["styles", "scripts"], function () {
       }
     })).on("error", errorHandler)
     .pipe($.notify({ message: "Partial Include and Markdown Parsing" }))
-    .pipe(wiredep({directory: "bower_components"})).on("error", errorHandler)
+    .pipe(assets.restore())
+    .pipe($.useref())
     .pipe($.notify({ message: "Wiring Up Bower Components" }))
     .pipe(gulp.dest(basePaths.dev))
     .pipe(browserSync.stream());
@@ -122,8 +123,8 @@ gulp.task("images", function () {
 
   return gulp.src(paths.images.src + "**/*")
     .pipe($.using())
-    .pipe($.plumber())
-    .pipe($.cache($.imagemin({progressive: true, interlaced: true}))).on("error", errorHandler)
+    .pipe($.newer(paths.images.dev))
+    .pipe($.imagemin({progressive: true, interlaced: true})).on("error", errorHandler)
     .pipe(gulp.dest(paths.images.dev))
     .pipe(browserSync.stream());
 
@@ -134,7 +135,7 @@ gulp.task("fonts", function () {
   var filterFonts = gulpFilter("**/*.{eot,svg,ttf,woff}", { restore: true });
   return gulp.src("./bower.json")
     .pipe(mainBowerFiles())
-    .pipe(filterJS)
+    .pipe(filterFonts)
     .pipe(gulp.dest(paths.fonts.dev))
     .pipe(browserSync.stream());
 
