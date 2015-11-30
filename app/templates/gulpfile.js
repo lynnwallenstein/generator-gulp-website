@@ -163,11 +163,17 @@ gulp.task("extras", function () {
 });
 
 // Static Server + watching scss/html files
-gulp.task("watch", ["extras", "fonts", "images", "markup", "editor", "git", "open-browser"], function() {
+gulp.task("watch", ["extras", "fonts", "images", "markup", "editor", "git"], function() {
 
     browserSync.init({
-      server: basePaths.dev,
-      port: "9000"
+      server: {
+        baseDir: basePaths.dev,
+        routes: {
+            "/bower_components": "bower_components"
+        }
+      },
+      port: "9000",
+      browser: "google chrome"
     });
 
     gulp.watch([paths.styles.src + "**"], ["markup"]);
@@ -177,10 +183,6 @@ gulp.task("watch", ["extras", "fonts", "images", "markup", "editor", "git", "ope
     gulp.watch([paths.images.src + "**"], ["images"]);
     gulp.watch(basePaths.src + "*").on("change", browserSync.reload);
 
-});
-
-gulp.task("open-browser", function () {
-  require("opn")("http://localhost:9000");
 });
 
 gulp.task("editor", shell.task([
