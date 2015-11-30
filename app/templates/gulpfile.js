@@ -2,8 +2,8 @@
 "use strict";
 
 var basePaths = {
-    src: "app/",
-    dev: ".tmp/",
+    src: "src/",
+    dev: "serve/",
     dist: "dist/",
     bower: "bower_components/"
 };
@@ -192,9 +192,9 @@ gulp.task("git", shell.task([
 ]));
 
 
-gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
+gulp.task("publish-files", ["extras", "fonts", "images", "markup"], function () {
 
-  gulp.src([basePaths.bower + "**/*.{jpg,jpeg,gif,ico,svg,png}"], { base: "." })
+  gulp.src([basePaths.bower + "**/*.{jpg,jpeg,gif,ico,svg,png,js,css}"], { base: "." })
     .pipe(using())
     .pipe($.plumber())
     .pipe(gulp.dest(basePaths.dist))
@@ -252,24 +252,22 @@ gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
 
 });
 
-gulp.task("build-prep", ["clean"], function () {
+gulp.task("publish-prep", ["clean"], function () {
 
-  gulp.start("build-files");
+  gulp.start("publish-files");
 
 });
 
 // Static Server + watching scss/html files
-gulp.task("build-test-server", ["build-prep"], function() {
+gulp.task("publish", ["publish-prep"], function() {
 
     browserSync.init({
         server: basePaths.dist,
         port: "9001"
     });
 
-});
+    require("opn")("http://localhost:9001");
 
-gulp.task("build", ["build-test-server"], function () {
-  require("opn")("http://localhost:9001");
 });
 
 gulp.task("default", function () {

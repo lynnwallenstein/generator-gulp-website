@@ -1,4 +1,9 @@
 "use strict";
+
+var basePaths = {
+    src: "src/"
+};
+
 var join   = require("path").join;
 var yeoman = require("yeoman-generator");
 var yosay  = require("yosay");
@@ -35,17 +40,17 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   app: function () {
-    this.directory("app");
+    this.directory(basePaths.src);
 
-    this.directory("_partials", "app/partials");
-    this.directory("_sass", "app/sass");
-    this.directory("_coffeescript", "app/coffeescript");
-    this.directory("_images", "app/images");
-    this.directory("_fonts", "app/fonts");
+    this.directory("_partials", basePaths.src + "partials");
+    this.directory("_sass", basePaths.src + "sass");
+    this.directory("_coffeescript", basePaths.src + "coffeescript");
+    this.directory("_images", basePaths.src + "images");
+    this.directory("_fonts", basePaths.src + "fonts");
 
-    this.copy("favicon.ico",      "app/favicon.ico");
-    this.copy("robots.txt",       "app/robots.txt");
-    this.copy("humans.txt",       "app/humans.txt");
+    this.copy("favicon.ico",      basePaths.src + "favicon.ico");
+    this.copy("robots.txt",       basePaths.src + "robots.txt");
+    this.copy("humans.txt",       basePaths.src + "humans.txt");
     this.copy("_Gemfile",         "Gemfile");
     this.copy("_gitignore",       ".gitignore");
     this.copy("_gitattributes",   ".gitattributes");
@@ -62,7 +67,7 @@ module.exports = yeoman.generators.Base.extend({
   },
 
   writeIndex: function () {
-    this.template("index.html", "app/index.html");
+    this.template("index.html", basePaths.src + "index.html");
   },
 
   end: function () {
