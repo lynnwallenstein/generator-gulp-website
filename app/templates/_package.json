@@ -20,6 +20,7 @@
     "gulp-imagemin": "latest",
     "gulp-load-plugins": "latest",
     "gulp-livereload": "latest",
+    "gulp-main-bower-files": "latest",
     "gulp-minify-css": "latest",
     "gulp-minify-html": "latest",
     "gulp-notify": "latest",
@@ -36,7 +37,6 @@
     "jshint": "latest",
     "jshint-stylish": "latest",
     "lazypipe": "latest",
-    "main-bower-files": "latest",
     "markdown": "latest",
     "opn": "latest",
     "wiredep": "latest"
