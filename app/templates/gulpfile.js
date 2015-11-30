@@ -4,6 +4,7 @@
 var gulp        = require("gulp");
 var $           = require("gulp-load-plugins")();
 
+var browserSync = require('browser-sync').create();
 var coffee      = require("gulp-coffee");
 var csso        = require("gulp-csso");
 var del         = require("del");
@@ -16,8 +17,6 @@ var minifyHtml  = require("gulp-minify-html");
 var minifyCss   = require("gulp-minify-css");
 var notify      = require("gulp-notify");
 var sass        = require("gulp-ruby-sass");
-var serveStatic = require("serve-static");
-var serveIndex  = require("serve-index");
 var shell       = require("gulp-shell");
 var size        = require("gulp-size");
 var sourcemaps  = require("gulp-sourcemaps");
@@ -78,7 +77,8 @@ gulp.task("markup", ["styles", "scripts"], function () {
     .pipe(notify({ message: "Partial Include and Markdown Parsing" }))
     .pipe(wiredep({directory: "bower_components"})).on("error", errorHandler)
     .pipe(notify({ message: "Wiring Up Bower Components" }))
-    .pipe(gulp.dest(".tmp/"));
+    .pipe(gulp.dest(".tmp/"))
+    .pipe(browserSync.stream());
 
   gulp.src(".tmp/js/**")
     .pipe(using())
@@ -86,6 +86,7 @@ gulp.task("markup", ["styles", "scripts"], function () {
     .pipe($.jshint())
     .pipe($.jshint.reporter("jshint-stylish"))
     .pipe($.jshint.reporter("fail"))
+    .pipe(browserSync.stream());
 
 });
 
@@ -95,7 +96,8 @@ gulp.task("images", function () {
     .pipe(using())
     .pipe($.plumber())
     .pipe($.cache($.imagemin({progressive: true, interlaced: true}))).on("error", errorHandler)
-    .pipe(gulp.dest(".tmp/img"));
+    .pipe(gulp.dest(".tmp/img"))
+    .pipe(browserSync.stream());
 
 });
 
@@ -106,7 +108,8 @@ gulp.task("fonts", function () {
     .pipe($.plumber())
     .pipe($.filter("**/*.{eot,svg,ttf,woff}")).on("error", errorHandler)
     .pipe($.flatten())
-    .pipe(gulp.dest(".tmp/fonts"));
+    .pipe(gulp.dest(".tmp/fonts"))
+    .pipe(browserSync.stream());
 
 });
 
@@ -115,29 +118,31 @@ gulp.task("extras", function () {
   gulp.src("app/*.txt")
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest(".tmp/"));
+    .pipe(gulp.dest(".tmp/"))
+    .pipe(browserSync.stream());
 
   gulp.src("app/*.ico")
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest(".tmp/"));
+    .pipe(gulp.dest(".tmp/"))
+    .pipe(browserSync.stream());
 
 });
 
-gulp.task("connect", ["extras", "fonts", "images", "markup"], function () {
-  var app = require("connect")()
-    .use(require("connect-livereload")({port: 35729}))
-    .use(serveStatic(".tmp"))
-    // paths to bower_components should be relative to the current file
-    // e.g. in app/index.html you should use ../bower_components
-    .use("/bower_components", serveStatic("bower_components"))
-    .use(serveIndex(".tmp"));
+// Static Server + watching scss/html files
+gulp.task("connect", ["extras", "fonts", "images", "markup"], function() {
 
-  require("http").createServer(app)
-    .listen(9000)
-    .on("listening", function () {
-      console.log("Started connect web server on http://localhost:9000");
+    browserSync.init({
+      server: ".tmp",
+      port: "9000"
     });
+
+    gulp.watch(["app/sass/**"], ["markup"]);
+    gulp.watch(["app/*.html"], ["markup"]);
+    gulp.watch(["app/partials/**"], ["markup"]);
+    gulp.watch(["app/coffeescript/**"], ["markup"]);
+    gulp.watch(["app/images/**"], ["images"]);
+    gulp.watch(".tmp/*").on("change", browserSync.reload);
 
 });
 
@@ -229,15 +234,12 @@ gulp.task("build-prep", ["clean"], function () {
 
 });
 
-gulp.task("build-test-server", ["build-prep"], function () {
-  var app = require("connect")()
-    .use(serveStatic("dist"))
-    .use(serveIndex("dist"));
+// Static Server + watching scss/html files
+gulp.task("build-test-server", ["build-prep"], function() {
 
-  require("http").createServer(app)
-    .listen(9001)
-    .on("listening", function () {
-      console.log("Started build test server on http://localhost:9001");
+    browserSync.init({
+        server: "dist",
+        port: "9001"
     });
 
 });
