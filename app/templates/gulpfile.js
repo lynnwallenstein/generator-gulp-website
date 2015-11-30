@@ -3,31 +3,34 @@
 
 var basePaths = {
     src: "app/",
-    dev: ".tmp/"
+    dev: ".tmp/",
     dist: "dist/",
     bower: "bower_components/"
 };
 
 var paths = {
   images: {
-    src: basePaths.src + 'images/',
-    dev: basePaths.dev + 'img/',
-    dest: basePaths.dist + 'img/'
+    src: basePaths.src + "images/",
+    dev: basePaths.dev + "img/",
+    dist: basePaths.dist + "img/"
   },
   scripts: {
-    src: basePaths.src + 'coffeescript/',
-    dev: basePaths.dev + 'js/',
-    dest: basePaths.dist + 'js/'
+    src: basePaths.src + "coffeescript/",
+    dev: basePaths.dev + "js/",
+    dist: basePaths.dist + "js/"
   },
   styles: {
-    src: basePaths.src + 'sass/',
-    dev: basePaths.dev + 'css/',
-    dest: basePaths.dist + 'css/'
+    src: basePaths.src + "sass/",
+    dev: basePaths.dev + "css/",
+    dist: basePaths.dist + "css/"
   },
   fonts: {
-    src: basePaths.src + 'fonts/',
-    dev: basePaths.dev + 'fonts/',
-    dest: basePaths.dist + 'fonts/'
+    src: basePaths.src + "fonts/",
+    dev: basePaths.dev + "fonts/",
+    dist: basePaths.dist + "fonts/"
+  },
+  partials: {
+    dev: basePaths.src + "partials/"
   }
 };
 
@@ -78,7 +81,7 @@ gulp.task("styles", function () {
 
 gulp.task("scripts", function() {
 
-  return gulp.src("app/coffeescript/*.coffee")
+  return gulp.src(paths.scripts.src + "*.coffee")
     .pipe(using())
     .pipe(sourcemaps.init()).on("error", errorHandler)
     .pipe(notify({ message: "Sourcemaps Initialized" }))
@@ -86,7 +89,7 @@ gulp.task("scripts", function() {
     .pipe(notify({ message: "Compiled CoffeeScript" }))
     .pipe(sourcemaps.write()).on("error", errorHandler)
     .pipe(notify({ message: "Writing Sourcemaps" }))
-    .pipe(gulp.dest(".tmp/js"))
+    .pipe(gulp.dest(paths.scripts.dev))
     .pipe(notify({ message: "Copyting to app/js" }))
     .pipe(size());
 
@@ -94,12 +97,12 @@ gulp.task("scripts", function() {
 
 gulp.task("markup", ["styles", "scripts"], function () {
 
-  gulp.src(["app/*.html"])
+  gulp.src([basePaths.src + "*.html"])
     .pipe(using())
     .pipe($.plumber())
     .pipe(fileinclude({
       prefix: "@@",
-      basepath: "app/partials/",
+      basepath: paths.partials.dev,
       filters: {
         markdown: markdown.parse
       }
@@ -107,10 +110,10 @@ gulp.task("markup", ["styles", "scripts"], function () {
     .pipe(notify({ message: "Partial Include and Markdown Parsing" }))
     .pipe(wiredep({directory: "bower_components"})).on("error", errorHandler)
     .pipe(notify({ message: "Wiring Up Bower Components" }))
-    .pipe(gulp.dest(".tmp/"))
+    .pipe(gulp.dest(basePaths.dev))
     .pipe(browserSync.stream());
 
-  gulp.src(".tmp/js/**")
+  gulp.src(paths.scripts.dev + "**")
     .pipe(using())
     .pipe($.plumber())
     //.pipe($.jshint())
@@ -122,39 +125,39 @@ gulp.task("markup", ["styles", "scripts"], function () {
 
 gulp.task("images", function () {
 
-  return gulp.src("app/images/**/*")
+  return gulp.src(paths.images.src + "**/*")
     .pipe(using())
     .pipe($.plumber())
     .pipe($.cache($.imagemin({progressive: true, interlaced: true}))).on("error", errorHandler)
-    .pipe(gulp.dest(".tmp/img"))
+    .pipe(gulp.dest(paths.images.dev))
     .pipe(browserSync.stream());
 
 });
 
 gulp.task("fonts", function () {
 
-  return gulp.src(require("main-bower-files")().concat("app/fonts/**/*"))
+  return gulp.src(require("main-bower-files")().concat(paths.fonts.src + "**/*"))
     .pipe(using())
     .pipe($.plumber())
     .pipe($.filter("**/*.{eot,svg,ttf,woff}")).on("error", errorHandler)
     .pipe($.flatten())
-    .pipe(gulp.dest(".tmp/fonts"))
+    .pipe(gulp.dest(paths.fonts.dev))
     .pipe(browserSync.stream());
 
 });
 
 gulp.task("extras", function () {
 
-  gulp.src("app/*.txt")
+  gulp.src(basePaths.src + "*.txt")
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest(".tmp/"))
+    .pipe(gulp.dest(basePaths.dev))
     .pipe(browserSync.stream());
 
-  gulp.src("app/*.ico")
+  gulp.src(basePaths.src + "*.ico")
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest(".tmp/"))
+    .pipe(gulp.dest(basePaths.dev))
     .pipe(browserSync.stream());
 
 });
@@ -163,16 +166,16 @@ gulp.task("extras", function () {
 gulp.task("watch", ["extras", "fonts", "images", "markup", "editor", "git", "open-browser"], function() {
 
     browserSync.init({
-      server: ".tmp",
+      server: basePaths.dev,
       port: "9000"
     });
 
-    gulp.watch(["app/sass/**"], ["markup"]);
-    gulp.watch(["app/*.html"], ["markup"]);
-    gulp.watch(["app/partials/**"], ["markup"]);
-    gulp.watch(["app/coffeescript/**"], ["markup"]);
-    gulp.watch(["app/images/**"], ["images"]);
-    gulp.watch(".tmp/*").on("change", browserSync.reload);
+    gulp.watch([paths.styles.src + "**"], ["markup"]);
+    gulp.watch([basePaths.src + "*.html"], ["markup"]);
+    gulp.watch([paths.partials.dev + "**"], ["markup"]);
+    gulp.watch([paths.scripts.src + "**"], ["markup"]);
+    gulp.watch([paths.images.src + "**"], ["images"]);
+    gulp.watch(basePaths.src + "*").on("change", browserSync.reload);
 
 });
 
@@ -191,13 +194,13 @@ gulp.task("git", shell.task([
 
 gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
 
-  gulp.src(["bower_components/**/*.{jpg,jpeg,gif,ico,svg,png}"], { base: "." })
+  gulp.src([basePaths.bower + "**/*.{jpg,jpeg,gif,ico,svg,png}"], { base: "." })
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest("dist/"))
+    .pipe(gulp.dest(basePaths.dist))
     .pipe($.size({title: "build bower", gzip: true}));
 
-  gulp.src([".tmp/*.html"], { dot: true })
+  gulp.src([basePaths.dev + "*.html"], { dot: true })
     .pipe(using())
     .pipe($.plumber())
     .pipe(usemin({
@@ -207,44 +210,44 @@ gulp.task("build-files", ["extras", "fonts", "images", "markup"], function () {
       inlinejs: [uglify],
       inlinecss: [minifyCss, "concat"]
     })).on("error", errorHandler)
-    .pipe(gulp.dest("dist"))
+    .pipe(gulp.dest(basePaths.dist))
     .pipe($.size({title: "build html", gzip: true}));
 
-  gulp.src([".tmp/img/**"], { dot: true })
+  gulp.src([paths.images.dev + "**"], { dot: true })
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest("dist/img"))
+    .pipe(gulp.dest(paths.images.dist))
     .pipe($.size({title: "build images", gzip: true}));
 
-  gulp.src([".tmp/css/*.css"], { dot: true })
+  gulp.src([paths.styles.dev + "*.css"], { dot: true })
     .pipe(using())
     .pipe($.plumber())
     .pipe($.if("*.css", $.csso()))
-    .pipe(gulp.dest("dist/css"))
+    .pipe(gulp.dest(paths.styles.dist))
     .pipe($.size({title: "build css", gzip: true}));
 
-  gulp.src([".tmp/js/*.js"], { dot: true })
+  gulp.src([paths.scripts.dev + "*.js"], { dot: true })
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest("dist/js"))
+    .pipe(gulp.dest(paths.scripts.dist))
     .pipe($.size({title: "build js", gzip: true}));
 
-  gulp.src([".tmp/fonts/**"], { dot: true })
+  gulp.src([paths.fonts.dev + "**"], { dot: true })
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest("dist/fonts"))
+    .pipe(gulp.dest(paths.fonts.dist))
     .pipe($.size({title: "build fonts", gzip: true}));
 
-  gulp.src([".tmp/*.ico"], { dot: true })
+  gulp.src([basePaths.dev + "*.ico"], { dot: true })
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest("dist/"))
+    .pipe(gulp.dest(basePaths.dist))
     .pipe($.size({title: "build favicons", gzip: true}));
 
-  gulp.src([".tmp/*.txt"], { dot: true })
+  gulp.src([basePaths.dev + "*.txt"], { dot: true })
     .pipe(using())
     .pipe($.plumber())
-    .pipe(gulp.dest("dist/"))
+    .pipe(gulp.dest(basePaths.dist))
     .pipe($.size({title: "build robots and humans", gzip: true}));
 
 });
@@ -259,7 +262,7 @@ gulp.task("build-prep", ["clean"], function () {
 gulp.task("build-test-server", ["build-prep"], function() {
 
     browserSync.init({
-        server: "dist",
+        server: basePaths.dist,
         port: "9001"
     });
 
