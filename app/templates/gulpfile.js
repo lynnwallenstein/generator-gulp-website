@@ -46,8 +46,8 @@ var gulpif          = require("gulp-if");
 var gutil           = require("gulp-util");
 var mainBowerFiles  = require('gulp-main-bower-files');
 var markdown        = require("markdown");
-var minifyHtml      = require("gulp-minify-html");
-var minifyCss       = require("gulp-minify-css");
+var minifyHtml      = require("gulp-htmlmin");
+var minifyCss       = require("gulp-cssnano");
 var sass            = require("gulp-ruby-sass");
 var shell           = require("gulp-shell");;
 var usemin          = require("gulp-usemin");
@@ -90,11 +90,9 @@ gulp.task("scripts", function() {
 })
 
 gulp.task("markup", ["styles", "scripts"], function () {
-  var assets = $.useref.assets({searchPath: paths.scripts.dev});
 
   gulp.src([basePaths.src + "*.html"])
     .pipe($.using())
-    .pipe(assets)
     .pipe(fileinclude({
       prefix: "@@",
       basepath: paths.partials.dev,
@@ -103,8 +101,7 @@ gulp.task("markup", ["styles", "scripts"], function () {
       }
     })).on("error", errorHandler)
     .pipe($.notify({ message: "Partial Include and Markdown Parsing" }))
-    .pipe(assets.restore())
-    .pipe($.useref())
+    .pipe($.useref()).on("error", errorHandler)
     .pipe($.notify({ message: "Wiring Up Bower Components" }))
     .pipe(gulp.dest(basePaths.dev))
     .pipe(browserSync.stream());
